@@ -49,42 +49,46 @@ function App() {
   };
 
   const handleSubmit = async () => {
-    setLoading(true);
-    setPrice(null);
-    console.log(form);
-    const result = await predictPrice({
-      Area: Number(form.Area),
-      Bedrooms: Number(form.Bedrooms),
-      Bathrooms: Number(form.Bathrooms),
-      Age: Number(form.Age),
-      Location: form.Location,
-    });
+    try {
+      setLoading(true);
+      setPrice(null);
 
-    // Save to history table
-    const newRecord = {
-      ...form,
-      predicted: result.predicted_price,
-      time: new Date().toLocaleTimeString(),
-    };
+      const result = await predictPrice({
+        Area: Number(form.Area),
+        Bedrooms: Number(form.Bedrooms),
+        Bathrooms: Number(form.Bathrooms),
+        Age: Number(form.Age),
+        Location: form.Location,
+      });
 
-    setHistory((prev) => [...prev, newRecord]);
+      const newRecord = {
+        ...form,
+        predicted: result.predicted_price,
+        time: new Date().toLocaleTimeString(),
+      };
 
-    // Animated price counter
-    let count = 0;
-    const target = result.predicted_price;
-    const step = target / 40;
+      setHistory((prev) => [...prev, newRecord]);
 
-    const interval = setInterval(() => {
-      count += step;
-      if (count >= target) {
-        setPrice(target);
-        clearInterval(interval);
-      } else {
-        setPrice(Math.floor(count));
-      }
-    }, 20);
+      let count = 0;
+      const target = result.predicted_price;
+      const step = target / 40;
 
-    setLoading(false);
+      const interval = setInterval(() => {
+        count += step;
+        if (count >= target) {
+          setPrice(target);
+          clearInterval(interval);
+        } else {
+          setPrice(Math.floor(count));
+        }
+      }, 20);
+
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -139,7 +143,7 @@ function App() {
           </div>
 
           <button onClick={handleSubmit} disabled={loading}>
-            {loading ? "🔄 Analyzing..." : "Predict Price"}
+            {loading ? "🔄 Predicting..." : "Predict Price"}
           </button>
 
           {price && (
