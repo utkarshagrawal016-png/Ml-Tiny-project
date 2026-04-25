@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import numpy as np
 import pickle
+import os
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="House Price Prediction API")
@@ -13,8 +14,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-model = pickle.load(open("model.pkl", "rb"))
-
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+model_path = os.path.join(BASE_DIR, "model.pkl")
+print("Looking for model at:", model_path)
+model = pickle.load(open(model_path, "rb"))
+print("Model loaded successfully")
 class HouseInput(BaseModel):
     Area: float
     Bedrooms: int
