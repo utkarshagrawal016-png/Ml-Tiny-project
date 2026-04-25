@@ -51,7 +51,7 @@ function App() {
   const handleSubmit = async () => {
     setLoading(true);
     setPrice(null);
-
+    console.log(form);
     const result = await predictPrice({
       Area: Number(form.Area),
       Bedrooms: Number(form.Bedrooms),
