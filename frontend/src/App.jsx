@@ -127,6 +127,7 @@ function App() {
 
             {/* SIMPLE LOCATION DROPDOWN */}
             <div className="input-group">
+              <label className="select-label">Location (India)</label>
               <select
                 name="Location"
                 value={form.Location}
@@ -138,7 +139,6 @@ function App() {
                   </option>
                 ))}
               </select>
-              <label className="select-label">Location (India)</label>
             </div>
           </div>
 
